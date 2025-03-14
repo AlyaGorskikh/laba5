@@ -1,7 +1,9 @@
     .footer {
-        background-color: #302e29;
-        padding: 11px;
-        text-align: center;
+        display: flex;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 10;
         margin-top: auto; /* Чтобы футер прижимался к низу, если контента мало */
     }
     
@@ -27,9 +29,13 @@
     .footer.light {
         background-color: #302e29; /* Цвет фона для светлой темы */
         color: #e6e6e6; /* Цвет текста для светлой темы */
+        font-family: 'Roboto', sans-serif; /* Используем Roboto */
+        transition: background-color 0.5s ease, color 0.5s ease; /* Плавный переход для фона и цвета текста */
     }
     
     .footer.dark {
         background-color: rgb(17, 17, 17); /* Цвет фона для темной темы */
         color: #e6e6e6; /* Цвет текста для темной темы */
+        font-family: 'Roboto', sans-serif; /* Используем Roboto */
+        transition: background-color 0.5s ease, color 0.5s ease; /* Плавный переход для фона и цвета текста */
     }

@@ -5,6 +5,10 @@ body.light-theme {
     color: rgb(59, 55, 48); /* Цвет шрифта для светлой темы */
 }
 
+body {
+    transition: background-color 0.5s ease, color 0.5s ease; /* Плавный переход для фона и цвета текста */
+}
+
 body.dark-theme {
     background-color: rgb(32, 32, 32); /* Цвет фона для темной темы */
     color: white; /* Цвет шрифта для темной темы */
@@ -15,16 +19,4 @@ html, body {
     margin: 0;
 }
 
-.app-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Задаем минимальную высоту на всю высоту окна */
-}
-
-.my-title {
-    font-family: 'Arial', sans-serif; /* Задайте нужный шрифт */
-    font-size: 22px; /* размер шрифта */
-    text-align: center; /* выравнивание текста по центру */
-    margin: 2; /* отступ */
-}
 

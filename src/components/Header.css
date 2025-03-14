@@ -1,51 +1,97 @@
 /* Header.css */
 .header {
     display: flex;
-    align-items: center; /* Центрируем содержимое по вертикали */
     padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Тень для заголовка */
-    position: relative; /* Позволяет позиционировать дочерние элементы */
-    z-index: 10; /* Значение выше, чем у Content */
-
-}
-
-.header__title {
-    font-family: 'Roboto', sans-serif; /* Используем Roboto */
-    font-size: 35px; /* Размер шрифта заголовка */
-    margin: 0; /* Убираем отступы */
-    flex-grow: 1; /* Позволяет заголовку занимать оставшееся пространство */
-    text-align: center; /* Центрируем текст внутри заголовка */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 10;
 }
 
 .header.light {
-    background-color: #e6e6e6; /* Молочный цвет фона */
-    color: rgb(59, 55, 48); /* Цвет текста для светлой темы */
+    background-color: #e6e6e6;
+    color: rgb(59, 55, 48);
+    transition: background-color 0.5s ease, color 0.5s ease; /* Плавный переход для фона и цвета текста */
 }
 
 .header.dark {
-    background-color: rgb(15, 15, 15); /* Цвет фона для темной темы */
-    color: #e6e6e6; /* Цвет текста для темной темы */
+    background-color: rgb(15, 15, 15);
+    color: #e6e6e6;
+    transition: background-color 0.5s ease, color 0.5s ease; /* Плавный переход для фона и цвета текста */
 }
 
-.menu__container {
-    position: absolute; /* Позиционируем меню абсолютно */
-    top: 20px; /* Отступ сверху */
-    left: 20px; /* Отступ слева */
-}
 
 .theme-toggle-button {
-    position: absolute; /* Позиционируем кнопку абсолютно */
-    top: 20px; /* Отступ сверху */
-    right: 20px; /* Отступ справа */
-    background-color: #ddd; /* Цвет фона кнопки */
-    color: #000; /* Цвет текста кнопки */
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #b1b1b1; /* Цвет фона кнопки */
+    color: rgb(59, 55, 48); /* Цвет текста кнопки */
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
     border: none; /* Убираем рамку */
-    border-radius: 5px; /* Скругляем углы */
-    padding: 5px 10px; /* Отступы внутри кнопки */
+    border-radius: 5px; /* Скругленные углы */
+    padding: 10px 20px; /* Внутренние отступы */
     cursor: pointer; /* Курсор при наведении */
     transition: background-color 0.3s; /* Плавный переход цвета */
 }
 
+
 .theme-toggle-button:hover {
-    background-color: #bbb; /* Цвет фона при наведении */
+    background-color: #808080; /* Цвет фона при наведении */
+    color: #ffffff; /* Цвет текста при наведении */
+}
+
+.logout-button {
+    position: absolute;
+    top: 20px;
+    right: 180px;
+    background-color: #b1b1b1; /* Цвет фона кнопки */
+    color: rgb(59, 55, 48); /* Цвет текста кнопки */
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    border: none; /* Убираем рамку */
+    border-radius: 5px; /* Скругленные углы */
+    padding: 10px 20px; /* Внутренние отступы */
+    cursor: pointer; /* Курсор при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета */
+}
+
+.logout-button:hover {
+    background-color: #808080; /* Цвет фона при наведении */
+    color: #ffffff; /* Цвет текста при наведении */
+}
+
+.auth-button {
+    position: absolute;
+    top: 20px;
+    right: 180px;
+    background-color: #b1b1b1; /* Цвет фона кнопки */
+    color: rgb(59, 55, 48); /* Цвет текста кнопки */
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    border: none; /* Убираем рамку */
+    border-radius: 5px; /* Скругленные углы */
+    padding: 10px 20px; /* Внутренние отступы */
+    cursor: pointer; /* Курсор при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета */
+}
+
+.auth-button:hover {
+    background-color: #808080; /* Цвет фона при наведении */
+    color: #ffffff; /* Цвет текста при наведении */
+}
+
+.user-email {
+    position: absolute;
+    top: 45px;
+    right: 280px;
+    font-family: 'Roboto', sans-serif; /* Задаем шрифт Roboto */
+    font-size: 17px;
+    margin-left: 10px; /* Отступ слева от других элементов */
+    cursor: pointer; /* Курсор при наведении */
+}
+
+/* Изменение цвета при наведении */
+.user-email:hover {
+    color: rgb(152, 177, 106); /* Здесь замените #ff7f50 на желаемый цвет при наведении */
 }

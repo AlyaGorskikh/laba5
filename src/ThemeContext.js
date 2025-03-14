@@ -28,7 +28,7 @@ export const ThemeProvider = ({ children }) => {
     );
 };
 
-// Хук для использования контекста
+// Хук для использования контекст
 export const useTheme = () => {
     return useContext(ThemeContext);
 };
