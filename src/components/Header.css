@@ -1,0 +1,51 @@
+/* Header.css */
+.header {
+    display: flex;
+    align-items: center; /* Центрируем содержимое по вертикали */
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Тень для заголовка */
+    position: relative; /* Позволяет позиционировать дочерние элементы */
+    z-index: 10; /* Значение выше, чем у Content */
+
+}
+
+.header__title {
+    font-family: 'Roboto', sans-serif; /* Используем Roboto */
+    font-size: 35px; /* Размер шрифта заголовка */
+    margin: 0; /* Убираем отступы */
+    flex-grow: 1; /* Позволяет заголовку занимать оставшееся пространство */
+    text-align: center; /* Центрируем текст внутри заголовка */
+}
+
+.header.light {
+    background-color: #e6e6e6; /* Молочный цвет фона */
+    color: rgb(59, 55, 48); /* Цвет текста для светлой темы */
+}
+
+.header.dark {
+    background-color: rgb(15, 15, 15); /* Цвет фона для темной темы */
+    color: #e6e6e6; /* Цвет текста для темной темы */
+}
+
+.menu__container {
+    position: absolute; /* Позиционируем меню абсолютно */
+    top: 20px; /* Отступ сверху */
+    left: 20px; /* Отступ слева */
+}
+
+.theme-toggle-button {
+    position: absolute; /* Позиционируем кнопку абсолютно */
+    top: 20px; /* Отступ сверху */
+    right: 20px; /* Отступ справа */
+    background-color: #ddd; /* Цвет фона кнопки */
+    color: #000; /* Цвет текста кнопки */
+    border: none; /* Убираем рамку */
+    border-radius: 5px; /* Скругляем углы */
+    padding: 5px 10px; /* Отступы внутри кнопки */
+    cursor: pointer; /* Курсор при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета */
+}
+
+.theme-toggle-button:hover {
+    background-color: #bbb; /* Цвет фона при наведении */
+}
