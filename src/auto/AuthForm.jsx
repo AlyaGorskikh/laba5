@@ -1,31 +1,46 @@
-// src/components/AuthForm.js
+// src/components/AuthForm.jsx
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from './AuthContext';
-import './AuthContainer.css'; // Импортируйте CSS-файл для AuthForm
-import { useTheme } from '../ThemeContext'; // Импортируйте хук для использования темы
+import './AuthContainer.css';
+import { useTheme } from '../ThemeContext';
 
-const AuthForm = ({ isLogin }) => {
+const AuthForm = ({ isLogin, onSwitchToLogin }) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { login, register: registerUser } = useAuth();
-    const { isDarkTheme } = useTheme(); // Получаем данные темы
+    const { isDarkTheme } = useTheme();
 
     const onSubmit = useCallback((data) => {
         if (isLogin) {
-            console.log("Logging in:", data);
-            login(data.email); // Передаем email при входе
+            const isLoggedIn = login(data.email, data.password);
+            if (!isLoggedIn) {
+                alert("Пользователь не зарегистрирован. Пожалуйста, пройдите регистрацию.");
+                onSwitchToLogin(); // Переключаемся на форму регистрации
+            }
         } else {
-            console.log("Registering:", data);
-            registerUser(data.email); // Передаем email при регистрации
+            const isRegistered = registerUser(data.email, data.password);
+            if (!isRegistered) {
+                alert("Пользователь с таким email уже существует. Пожалуйста, войдите в систему.");
+                onSwitchToLogin(); // Переключаемся на форму авторизации
+            }
         }
-    }, [isLogin, login, registerUser]);
+    }, [isLogin, login, registerUser, onSwitchToLogin]);
 
     return (
         <form className={`auth-form ${isDarkTheme ? 'dark' : 'light'}`} onSubmit={handleSubmit(onSubmit)}>
             <div>
                 <label>Email:</label>
-                <input type="email" {...register('email', { required: true })} />
-                {errors.email && <span>This field is required</span>}
+                <input
+                    type="text"
+                    {...register('email', {
+                        required: "Это поле обязательно для заполнения",
+                        pattern: {
+                            value: /^[a-zA-Z0-9._%+-]+@(mail\.ru|gmail\.com|yandex\.ru)$/,
+                            message: "Email должен быть в формате: example@mail.ru, example@gmail.com или example@yandex.ru"
+                        }
+                    })}
+                />
+                {errors.email && <span>{errors.email.message}</span>}
             </div>
             <div>
                 <label>Password:</label>

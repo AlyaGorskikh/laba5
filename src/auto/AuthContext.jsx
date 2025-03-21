@@ -1,25 +1,44 @@
-// src/contexts/AuthContext.js
+// src/auto/AuthContext.jsx
 import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userEmail, setUserEmail] = useState(""); // Добавим состояние для хранения электронной почты
+    const [userEmail, setUserEmail] = useState("");
+    const [users, setUsers] = useState({}); // Хранение пользователей в виде объекта
 
-    const login = (email) => {
-        setIsAuthenticated(true);
-        setUserEmail(email); // Сохраняем email при входе
+    const login = (email, password) => {
+        // Проверяем, существует ли пользователь и совпадает ли пароль
+        if (users[email]) {
+            if (users[email] === password) {
+                setIsAuthenticated(true);
+                setUserEmail(email);
+                return true; // Успешный вход
+            } else {
+                alert("Неверный пароль.");
+                return false; // Неверный пароль
+            }
+        } else {
+            return false; // Пользователь не зарегистрирован
+        }
     };
+
     const logout = () => {
         setIsAuthenticated(false);
-        setUserEmail(""); // Очищаем email при выходе
+        setUserEmail("");
     };
-    const register = (email) => {
-        // Ваша логика регистрации
-        console.log("Registering user...");
+
+    const register = (email, password) => {
+        if (users[email]) {
+            // Если пользователь уже существует, ничего не делаем
+            return false;
+        }
+        // Сохраняем пользователя
+        setUsers(prevUsers => ({ ...prevUsers, [email]: password }));
         setIsAuthenticated(true);
-        setUserEmail(email); // Сохраняем email при регистрации
+        setUserEmail(email);
+        return true; // Успешная регистрация
     };
 
     return (

@@ -1,15 +1,15 @@
-// src/components/UserProfile.js
+// src/components/UserProfile.jsx
 import React from 'react';
-import { useAuth } from '../auto/AuthContext'; // Импортируем контекст аутентификации
+import { useAuth } from '../auto/AuthContext'; // этот хук будет использоваться для доступа к данным о пользователе и аутентификации в контексте
 
+// этот компонент будет отображать информацию о пользователе
 const UserProfile = () => {
-    const { userEmail } = useAuth(); // Получаем email пользователя из контекста
+    const { userEmail } = useAuth(); // Получаем email пользователя из хука, это значение будет содержать электронную почту пользователя, если он аутентифицирован
 
     return (
         <div>
             <h3>User Profile</h3>
             <p>Email: {userEmail}</p>
-            {/* Здесь можно также добавить другие данные пользователя */}
         </div>
     );
 };

@@ -1,14 +1,14 @@
 import React from 'react';
 import FeedbackForm from './feedback/FeedbackForm';
 import FeedbackList from './feedback/FeedbackList';
-import { useTheme } from './ThemeContext';  // Импортируем useTheme
-import './FeedbackBlock.css'; // Импортируем CSS файл
+import { useTheme } from './ThemeContext';
+import './FeedbackBlock.css';
 
 const FeedbackBlock = () => {
-    const { isDarkTheme } = useTheme();  // Используем контекст темы
+    const { isDarkTheme } = useTheme();
 
     return (
-        <div className={`feedback-block ${isDarkTheme ? 'dark' : 'light'}`}> {/* Применение класса для стилей */}
+        <div className={`feedback-block ${isDarkTheme ? 'dark' : 'light'}`}>
             <h2>Обратная связь</h2>
             <FeedbackForm />
             <FeedbackList />

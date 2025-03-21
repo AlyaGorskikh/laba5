@@ -1,31 +1,40 @@
 // components/Menu.js
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom'; // Импортируем Link
-import './Menu.css'; // Подключаем стили
-import { useTheme } from '../ThemeContext'; // Импортируем хук useTheme
-import Counter from './Counter';
+import { Link } from 'react-router-dom';
+import './Menu.css';
+import { useTheme } from '../ThemeContext';
+
+const menuItems = [
+    { path: '/', label: 'Лабораторная работа № 1' },
+    { path: '/lab2', label: 'Лабораторная работа № 2' },
+    { path: '/lab3', label: 'Лабораторная работа № 3' },
+    { path: '/lab4', label: 'Лабораторная работа № 4' },
+    { path: '/lab5', label: 'Лабораторная работа № 5' },
+    { path: '/lab6', label: 'Лабораторная работа № 6' },
+    { path: '/lab7', label: 'Лабораторная работа № 7' },
+    { path: '/lab8', label: 'Лабораторная работа № 8' },
+    { path: '/lab9', label: 'Лабораторная работа № 9' },
+    { path: '/counter', label: 'Счетчик' },
+];
 
 const Menu = () => {
-    const [isOpen, setIsOpen] = useState(false); // Состояние для управления открытием меню
-    const { isDarkTheme } = useTheme(); // Получаем текущее состояние темы
-    const menuRef = useRef(null); // Создаем реф для меню
+    const [isOpen, setIsOpen] = useState(false);
+    const { isDarkTheme } = useTheme();
+    const menuRef = useRef(null);
 
     const toggleMenu = () => {
-        setIsOpen(!isOpen); // Переключаем состояние меню
+        setIsOpen(!isOpen);
     };
 
-    // Обработчик клика вне меню
     const handleClickOutside = (event) => {
         if (menuRef.current && !menuRef.current.contains(event.target)) {
-            setIsOpen(false); // Закрываем меню, если клик вне него
+            setIsOpen(false);
         }
     };
 
     useEffect(() => {
-        // Добавляем обработчик события клика
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
-            // Удаляем обработчик события при размонтировании компонента
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
@@ -39,16 +48,13 @@ const Menu = () => {
             </button>
             <nav className={`menu ${isOpen ? 'menu-open' : ''} ${isDarkTheme ? 'dark' : 'light'}`}>
                 <ul>
-                    <li><Link to="/" onClick={() => setIsOpen(false)}>Лабораторная работа № 1</Link></li>
-                    <li><Link to="/lab2" onClick={() => setIsOpen(false)}>Лабораторная работа № 2</Link></li>
-                    <li><Link to="/lab3" onClick={() => setIsOpen(false)}>Лабораторная работа № 3</Link></li>
-                    <li><Link to="/lab4" onClick={() => setIsOpen(false)}>Лабораторная работа № 4</Link></li>
-                    <li><Link to="/lab5" onClick={() => setIsOpen(false)}>Лабораторная работа № 5</Link></li>
-                    <li><Link to="/lab6" onClick={() => setIsOpen(false)}>Лабораторная работа № 6</Link></li>
-                    <li><Link to="/lab7" onClick={() => setIsOpen(false)}>Лабораторная работа № 7</Link></li>
-                    <li><Link to="/lab8" onClick={() => setIsOpen(false)}>Лабораторная работа № 8</Link></li>
-                    <li><Link to="/lab9" onClick={() => setIsOpen(false)}>Лабораторная работа № 9</Link></li>
-                    <li><Link to="/counter" onClick={() => setIsOpen(false)}>Счетчик</Link></li>
+                    {menuItems.map((item) => (
+                        <li key={item.path}>
+                            <Link to={item.path} onClick={() => setIsOpen(false)}>
+                                {item.label}
+                            </Link>
+                        </li>
+                    ))}
                 </ul>
             </nav>
         </div>

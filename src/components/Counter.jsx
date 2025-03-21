@@ -1,18 +1,22 @@
-// src/components/Counter.js
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { increment, decrement } from '../redux/actions';
-import './Counter.css'; 
+// components/Counter.js
+import React, { useState } from 'react';
 
 const Counter = () => {
-    const count = useSelector((state) => state.counter.count);
-    const dispatch = useDispatch();
+    const [count, setCount] = useState(0);
+
+    const increment = () => {
+        setCount(prevCount => prevCount + 1);
+    };
+
+    const decrement = () => {
+        setCount(prevCount => prevCount - 1);
+    };
 
     return (
         <div>
             <h2>Счетчик: {count}</h2>
-            <button className="counter-button" onClick={() => dispatch(decrement())}>Уменьшить</button>
-            <button className="counter-button" onClick={() => dispatch(increment())}>Увеличить</button>
+            <button onClick={increment}>Увеличить</button>
+            <button onClick={decrement}>Уменьшить</button>
         </div>
     );
 };
