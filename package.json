@@ -1,7 +1,7 @@
 {
   "name": "laba4",
   "version": "0.1.0",
-  "homepage": "https://AlyaGorskikh.github.io/laba4",
+  "homepage": "https://AlyaGorskikh.github.io/laba5",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
