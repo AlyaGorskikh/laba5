@@ -1,10 +1,17 @@
 // components/Counter.js
-import React, { useState } from 'react';
+import React, { useState } from 'react'; // позволяет добавлять состояние в функциональные компоненты
 
-const Counter = () => {
+const Counter = () => { // стрелочная функция, которая будет возвращать JSX
+
+    // Создает состояние count с помощью хука useState.
+
+    // count — текущее значение счетчика, инициализируется нулем.
+    // setCount — функция, которая обновляет значение count
+
     const [count, setCount] = useState(0);
 
-    const increment = () => {
+    const increment = () => { // внутри функции increment вызывается setCount, чтобы обновить состояние count
+        // спользуется функция обратного вызова, которая принимает предыдущее значение prevCount и увеличивает его на 1
         setCount(prevCount => prevCount + 1);
     };
 
