@@ -1,70 +1,69 @@
-/* Menu.css */
+/* components/Menu.css */
+
 .menu__container {
-    position: relative; /* Устанавливаем относительное позиционирование для контейнера */
+    position: relative;
 }
 
-.menu__button {
+.menu-toggle {
     background: none;
     border: none;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    margin-top: 5px; /* Поднимаем кнопку на 5 пикселей */
-}
-
-.menu__icon {
-    width: 30px;
-    height: 5px;
-    background-color: #333; /* Цвет черт */
-    margin: 3px 0;
-}
-
-.menu {
-    display: none; /* Скрываем меню по умолчанию */
-    position: absolute; /* Позиционируем меню */
-    top: 0; /* Расположение под кнопкой */
-    left: 60px; /* Увеличиваем отступ от кнопки */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-}
-
-.menu.light {
-    background-color: #e6e6e6d3; /* Цвет фона меню */
-    color: #333333; /* Цвет текста для светлой темы */
-}
-
-.menu.dark {
-    background-color: rgba(15, 15, 15, 0.829); /* Цвет фона для темной темы */
-    color: #e6e6e6; /* Цвет текста для темной темы */
-}
-
-.menu-open {
-    display: block; /* Показываем меню при открытии */
-}
-
-.menu ul {
-    list-style: none;
     padding: 0;
     margin: 0;
 }
 
+/* Темная тема */
+.dark-m {
+    background-color: #6e6e6e; /* Цвет фона для темной темы */
+}
+
+/* Светлая тема */
+.light-m {
+    background-color: #a3a3a3; /* Цвет фона для светлой темы */
+}
+
+.navbar-toggler-icon {
+    display: inline-block;
+    width: 30px;
+    height: 3px;
+    background-color: currentColor;
+    position: relative;
+}
+
+.navbar-toggler-icon::before,
+.navbar-toggler-icon::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 3px;
+    background-color: currentColor;
+    position: absolute;
+    left: 0;
+}
+
+.navbar-toggler-icon::before {
+    top: -8px;
+}
+
+.navbar-toggler-icon::after {
+    top: 8px;
+}
+
+.menu {
+    position: absolute;
+    top: calc(100% + 17px); /* Сдвигаем контейнер вниз на 10 пикселей */
+    left: -20px; /* Сдвигаем контейнер влево на 20 пикселей */
+    z-index: 1000;
+    width: 250px; /* Установите желаемую ширину */
+    text-align: center; /* Центрирование текста */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Добавляем тень */
+}
+
+.menu ul {
+    padding: 0; /* Убираем отступы */
+    margin: 0; /* Убираем отступы */
+}
+
 .menu li {
-    padding: 10px 30px;
-    text-align: center; /* Центрируем текст в каждом элементе списка */
-}
-
-.menu li a {
-    font-family: 'Roboto', sans-serif; /* Используем Roboto */
-    text-decoration: none;
-    font-size: 19px; /* Увеличиваем размер шрифта */
-    color: inherit; /* Устанавливаем цвет текста в зависимости от родителя */
-}
-
-.menu li a:hover {
-    background-color: #a1a1a1; /* Цвет при наведении */
-}
-
-.menu li a:active,
-.menu li a:focus {
-    color: inherit; /* Цвет текста при нажатии и фокусе остается прежним */
+    list-style: none; /* Убираем маркеры списка */
 }

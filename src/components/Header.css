@@ -1,97 +1,77 @@
 /* Header.css */
+
+/* Общие стили для заголовка */
 .header {
+    padding: 10px;
     display: flex;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 10;
+    justify-content: space-between; /* Распределяет элементы по краям */
+    align-items: center;
 }
 
-.header.light {
-    background-color: #e6e6e6;
-    color: rgb(59, 55, 48);
-    transition: background-color 0.5s ease, color 0.5s ease; /* Плавный переход для фона и цвета текста */
+/* Стили для кнопки переключения темы */
+.btn-secondary {
+    background-color: #6c757d; /* Цвет для кнопки переключения темы */
+    color: white;
+    margin-left: auto; /* Перемещает кнопку вправо */
+    margin-right: 10px; /* Задаем отступ справа */
 }
 
-.header.dark {
-    background-color: rgb(15, 15, 15);
-    color: #e6e6e6;
-    transition: background-color 0.5s ease, color 0.5s ease; /* Плавный переход для фона и цвета текста */
+/* Стили для кнопки выхода */
+.btn-danger {
+    background-color: #dc3545; /* Цвет для кнопки выхода */
+    color: white;
 }
 
-
-.theme-toggle-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: #b1b1b1; /* Цвет фона кнопки */
-    color: rgb(59, 55, 48); /* Цвет текста кнопки */
-    font-family: 'Roboto', sans-serif;
-    font-size: 17px;
-    border: none; /* Убираем рамку */
-    border-radius: 5px; /* Скругленные углы */
-    padding: 10px 20px; /* Внутренние отступы */
-    cursor: pointer; /* Курсор при наведении */
-    transition: background-color 0.3s; /* Плавный переход цвета */
+/* Стили для кнопки входа */
+.btn-primary {
+    background-color: #007bff; /* Цвет для кнопки входа */
+    color: white;
 }
 
-
-.theme-toggle-button:hover {
-    background-color: #808080; /* Цвет фона при наведении */
-    color: #ffffff; /* Цвет текста при наведении */
-}
-
-.logout-button {
-    position: absolute;
-    top: 20px;
-    right: 180px;
-    background-color: #b1b1b1; /* Цвет фона кнопки */
-    color: rgb(59, 55, 48); /* Цвет текста кнопки */
-    font-family: 'Roboto', sans-serif;
-    font-size: 17px;
-    border: none; /* Убираем рамку */
-    border-radius: 5px; /* Скругленные углы */
-    padding: 10px 20px; /* Внутренние отступы */
-    cursor: pointer; /* Курсор при наведении */
-    transition: background-color 0.3s; /* Плавный переход цвета */
-}
-
-.logout-button:hover {
-    background-color: #808080; /* Цвет фона при наведении */
-    color: #ffffff; /* Цвет текста при наведении */
-}
-
-.auth-button {
-    position: absolute;
-    top: 20px;
-    right: 180px;
-    background-color: #b1b1b1; /* Цвет фона кнопки */
-    color: rgb(59, 55, 48); /* Цвет текста кнопки */
-    font-family: 'Roboto', sans-serif;
-    font-size: 17px;
-    border: none; /* Убираем рамку */
-    border-radius: 5px; /* Скругленные углы */
-    padding: 10px 20px; /* Внутренние отступы */
-    cursor: pointer; /* Курсор при наведении */
-    transition: background-color 0.3s; /* Плавный переход цвета */
-}
-
-.auth-button:hover {
-    background-color: #808080; /* Цвет фона при наведении */
-    color: #ffffff; /* Цвет текста при наведении */
-}
-
+/* Стили для пользователя */
 .user-email {
-    position: absolute;
-    top: 45px;
-    right: 280px;
-    font-family: 'Roboto', sans-serif; /* Задаем шрифт Roboto */
-    font-size: 17px;
-    margin-left: 10px; /* Отступ слева от других элементов */
-    cursor: pointer; /* Курсор при наведении */
+    cursor: pointer;
+    text-decoration: underline; /* Подчеркивание для кликабельного текста */
 }
 
-/* Изменение цвета при наведении */
-.user-email:hover {
-    color: rgb(152, 177, 106); /* Здесь замените #ff7f50 на желаемый цвет при наведении */
+/* Темная тема */
+.bg-dark {
+    background-color: #343a40; /* Цвет фона для темной темы */
 }
+
+.text-white {
+    color: rgb(255, 255, 255); /* Цвет текста для темной темы */
+}
+
+/* Светлая тема */
+.bg-light {
+    background-color: #ffffff; /* Цвет фона для светлой темы */
+}
+
+.text-dark {
+    color: black; /* Цвет текста для светлой темы */
+}
+
+/* Header.css */
+.nav-link-a {
+    color: inherit; /* Убираем стандартный цвет ссылки */
+    margin-left: 30px; /* Задаем отступ справа */
+    font-size: 20px; /* Увеличиваем размер шрифта */
+}
+
+.nav-link-a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
+
+/* Header.css */
+.nav-link-h {
+    color: inherit; /* Убираем стандартный цвет ссылки */
+    margin-left: 25px; /* Задаем отступ справа */
+    font-size: 20px; /* Увеличиваем размер шрифта */
+}
+
+.nav-link-h:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
+
+

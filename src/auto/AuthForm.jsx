@@ -1,59 +1,67 @@
 // src/components/AuthForm.jsx
-import React, { useCallback } from 'react'; // позволяет мемоизировать функции, чтобы избежать их пересоздания при каждом рендере
+import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from './AuthContext';
-import './AuthContainer.css';
 import { useTheme } from '../ThemeContext';
+import { Form, Button, Alert } from 'react-bootstrap'; // Импортируем необходимые компоненты из react-bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'; // Убедитесь, что Bootstrap импортирован
+import './AuthContainer.css'; // Импортируем стили
 
-const AuthForm = ({ isLogin, onSwitchToLogin }) => { // принимает два пропса: isLogin (логическое значение, указывающее, находится ли пользователь на странице входа) и onSwitchToLogin (функция для переключения между формами входа и регистрации
-
-    // register: Функция для регистрации полей формы
-    // handleSubmit: Функция для обработки отправки формы
-    // errors: Объект, содержащий ошибки валидации для полей формы
-
+const AuthForm = ({ isLogin, onSwitchToLogin }) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { login, register: registerUser } = useAuth();
     const { isDarkTheme } = useTheme();
 
-    const onSubmit = useCallback((data) => { // Создает функцию для обработки отправки формы, которая принимает объект data (содержащий значения полей формы)
+    const onSubmit = useCallback((data) => {
         if (isLogin) {
-            const isLoggedIn = login(data.email, data.password); // Вызывает функцию login, передавая введенные email и password, и сохраняет результат в переменной isLoggedIn
-            if (!isLoggedIn) { // Если вход не удался
+            const isLoggedIn = login(data.email, data.password);
+            if (!isLoggedIn) {
                 alert("Пользователь не зарегистрирован. Пожалуйста, пройдите регистрацию.");
-                onSwitchToLogin(); // Переключаемся на форму регистрации
+                onSwitchToLogin();
             }
-        } else { // если isLogin ложно
-            const isRegistered = registerUser(data.email, data.password); // Вызывает функцию registerUser, передавая введенные email и password, и сохраняет результат в переменной isRegistered
+        } else {
+            const isRegistered = registerUser(data.email, data.password);
             if (!isRegistered) {
                 alert("Пользователь с таким email уже существует. Пожалуйста, войдите в систему.");
-                onSwitchToLogin(); // Переключаемся на форму авторизации
+                onSwitchToLogin();
             }
         }
-    }, [isLogin, login, registerUser, onSwitchToLogin]); // Указывает зависимости для useCallback, чтобы функция пересоздавалась только при изменении этих значений
+    }, [isLogin, login, registerUser, onSwitchToLogin]);
 
     return (
-        <form className={`auth-form ${isDarkTheme ? 'dark' : 'light'}`} onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                <label>Email:</label>
-                <input
+        <Form className={`auth-form ${isDarkTheme ? 'bg-dark text-white' : 'bg-light text-dark'}`} onSubmit={handleSubmit(onSubmit)}>
+            <Form.Group controlId="formEmail">
+                <Form.Label>Email:</Form.Label>
+                <Form.Control
                     type="text"
                     {...register('email', {
-                        required: "Это поле обязательно для заполнения", // Обязательное поле с сообщением об ошибке
-                        pattern: { // Регулярное выражение для проверки формата email. Если есть ошибка, отображается сообщение
+                        required: "This field is required",
+                        pattern: {
                             value: /^[a-zA-Z0-9._%+-]+@(mail\.ru|gmail\.com|yandex\.ru)$/,
                             message: "Email должен быть в формате: example@mail.ru, example@gmail.com или example@yandex.ru"
                         }
                     })}
+                    isInvalid={!!errors.email} // Устанавливаем состояние ошибки
                 />
-                {errors.email && <span>{errors.email.message}</span>}
-            </div>
-            <div>
-                <label>Password:</label>
-                <input type="password" {...register('password', { required: true })} />
-                {errors.password && <span>This field is required</span>}
-            </div>
-            <button type="submit">{isLogin ? 'Войти' : 'Зарегистрироваться'}</button>
-        </form>
+                <Form.Control.Feedback type="invalid">
+                    {errors.email && <span>{errors.email.message}</span>}
+                </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="formPassword">
+                <Form.Label>Password:</Form.Label>
+                <Form.Control
+                    type="password"
+                    {...register('password', { required: true })}
+                    isInvalid={!!errors.password} // Устанавливаем состояние ошибки
+                />
+                <Form.Control.Feedback type="invalid">
+                    {errors.password && <span>This field is required</span>}
+                </Form.Control.Feedback>
+            </Form.Group>
+            <Button variant="primary" type="submit" className="mt-3">
+                {isLogin ? 'Войти' : 'Зарегистрироваться'}
+            </Button>
+        </Form>
     );
 };
 

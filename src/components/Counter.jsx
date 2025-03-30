@@ -1,29 +1,26 @@
 // components/Counter.js
 import React, { useState } from 'react'; // позволяет добавлять состояние в функциональные компоненты
+import 'bootstrap/dist/css/bootstrap.min.css'; // Импортируем стили Bootstrap
+import './Counter.css'; // Импортируем стили из Counter.css
 
 const Counter = () => { // стрелочная функция, которая будет возвращать JSX
+    const [count, setCount] = useState(0); // Создает состояние count с помощью хука useState.
 
-    // Создает состояние count с помощью хука useState.
-
-    // count — текущее значение счетчика, инициализируется нулем.
-    // setCount — функция, которая обновляет значение count
-
-    const [count, setCount] = useState(0);
-
-    const increment = () => { // внутри функции increment вызывается setCount, чтобы обновить состояние count
-        // спользуется функция обратного вызова, которая принимает предыдущее значение prevCount и увеличивает его на 1
+    const increment = () => { // функция для увеличения счетчика
         setCount(prevCount => prevCount + 1);
     };
 
-    const decrement = () => {
+    const decrement = () => { // функция для уменьшения счетчика
         setCount(prevCount => prevCount - 1);
     };
 
     return (
-        <div>
+        <div className="container"> {/* Используем класс container из CSS */}
             <h2>Счетчик: {count}</h2>
-            <button onClick={increment}>Увеличить</button>
-            <button onClick={decrement}>Уменьшить</button>
+            <div>
+                <button onClick={decrement} className="btn btn-primary">Уменьшить</button>
+                <button onClick={increment} className="btn btn-danger">Увеличить</button>
+            </div>
         </div>
     );
 };

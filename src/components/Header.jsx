@@ -3,34 +3,43 @@ import React from 'react';
 import Menu from './Menu';
 import { useTheme } from '../ThemeContext';
 import { useAuth } from '../auto/AuthContext';
-import '../components/Header.css';
-import { useNavigate } from 'react-router-dom'; // Импортируем для маршрутизации
+import { useNavigate, Link } from 'react-router-dom'; // Импортируем Link
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './Header.css'; // Импортируем стили
 
 const Header = () => {
-    const { isDarkTheme, toggleTheme } = useTheme(); // использует хук useTheme для получения текущего состояния темы isDarkTheme и функции для переключения темы toggleTheme
-    const { isAuthenticated, logout, userEmail } = useAuth(); // использует хук useAuth для получения данных о статусе аутентификации пользователя (isAuthenticated), функции выхода (logout) и электронной почте пользователя (userEmail)
-    const navigate = useNavigate(); // получаем navigate для навигации
+    const { isDarkTheme, toggleTheme } = useTheme();
+    const { isAuthenticated, logout, userEmail } = useAuth();
+    const navigate = useNavigate();
 
     const handleEmailClick = () => {
-        navigate('/profile'); // переход на страницу профиля пользователя
+        navigate('/profile');
     };
 
     return (
-        <header className={`header ${isDarkTheme ? 'dark' : 'light'}`}>
-            <Menu />
-            <button className="theme-toggle-button" onClick={toggleTheme}>
+        <header className={`header ${isDarkTheme ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
+            {isAuthenticated && <Menu />} {/* Условие для отображения Menu */}
+            {isAuthenticated && ( // Условие для отображения навигации
+                <nav>
+                    <Link to="/home" className="nav-link-h">Главная</Link>
+                    <Link to="/about" className="nav-link-a">О себе</Link>
+                </nav>
+            )}
+            <button className="btn btn-secondary" onClick={toggleTheme}>
                 {isDarkTheme ? 'Светлая тема' : 'Темная тема'}
             </button>
-            {isAuthenticated ? (
-                <>
-                    <span className="user-email" onClick={handleEmailClick}>
-                        {userEmail}
-                    </span>
-                    <button className="logout-button" onClick={logout}>Выйти</button>
-                </>
-            ) : (
-                <button className="auth-button" onClick={() => alert('Заполните форму')}>Войти</button>
-            )}
+            <div className="d-flex align-items-center">
+                {isAuthenticated ? (
+                    <>
+                        <span className="user-email me-3" onClick={handleEmailClick}>
+                            {userEmail}
+                        </span>
+                        <button className="btn btn-danger" onClick={logout}>Выйти</button>
+                    </>
+                ) : (
+                    <button className="btn btn-primary" onClick={() => alert('Заполните форму')}>Войти</button>
+                )}
+            </div>
         </header>
     );
 };

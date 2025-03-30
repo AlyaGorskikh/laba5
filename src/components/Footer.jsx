@@ -1,15 +1,30 @@
-import React from 'react';
+// src/components/Footer.jsx
+import React, { useState } from 'react';
 import { useTheme } from '../ThemeContext';
+import { Container } from 'react-bootstrap';
+import FeedbackBlock from '../FeedbackBlock'; // Импортируем FeedbackBlock
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './Footer.css';
 
 function Footer() {
     const { isDarkTheme } = useTheme();
+    const [showFeedback, setShowFeedback] = useState(false); // Состояние для управления видимостью блока отзывов
+
+    const toggleFeedback = () => {
+        setShowFeedback(!showFeedback);
+    };
 
     return (
-        <footer className={`footer ${isDarkTheme ? 'dark' : 'light'}`}>
-            <div className="footer-content">
-                <p>&copy; 2025 Лабораторные работы защищены.</p> {/* Создаёт элемент параграфа, который содержит текст с символом копирайта */}
-            </div>
+        <footer className={`footer ${isDarkTheme ? 'dark-f' : 'light-f'}`}>
+            <Container>
+                {showFeedback && <FeedbackBlock />} {/* Условный рендеринг блока отзывов */}
+                <button className="btn btn-primary mt-3" onClick={toggleFeedback}>
+                    Оставить отзыв
+                </button>
+                <div className="footer-content">
+                    <p className="mb-0">&copy; 2025 Лабораторные работы защищены.</p>
+                </div>
+            </Container>
         </footer>
     );
 }
