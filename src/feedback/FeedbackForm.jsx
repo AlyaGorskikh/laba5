@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useFeedback } from './FeedbackContext'; 
 import { useTheme } from '../ThemeContext';
-import './Feedback.css'; // Импортируйте CSS
+import './Feedback.css'; 
 
 const FeedbackForm = () => {
     const { register, handleSubmit, reset } = useForm();

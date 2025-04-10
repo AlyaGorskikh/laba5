@@ -1,0 +1,21 @@
+{
+  "users": [
+    {
+      "id": "0938",
+      "email": "sash@mail.ru",
+      "password": "1234"
+    }
+  ],
+  "feedback": [
+    {
+      "id": "fd6b",
+      "name": "sash@mail.ru",
+      "feedback": "Ёж"
+    },
+    {
+      "id": "fdfa",
+      "name": "Лунтик",
+      "feedback": "Я родился!"
+    }
+  ]
+}

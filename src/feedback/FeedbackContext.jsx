@@ -1,32 +1,70 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'; // Импортируем необходимые модули из React
 
-// Создаем контекст для отзывов, который будет использоваться для хранения и передачи данных о отзывах в приложении
-// Контекст позволяет передавать данные через дерево компонентов без необходимости передавать их через пропсы на каждом уровне
-const FeedbackContext = createContext();
+const FeedbackContext = createContext(); // Создаем контекст для отзывов
 
-// Создаёт компонент FeedbackProvider, который будет контекстным провайдером для FeedbackContext
-// Принимает children, что позволяет провайдеру оборачивать другие компоненты и предоставлять им доступ к контексту
-export const FeedbackProvider = ({ children }) => {
-    const [feedbacks, setFeedbacks] = useState([]); // Инициализирует состояние feedbacks с помощью хука useState. По умолчанию оно является пустым массивом. setFeedbacks — функция для обновления состояния
+export const FeedbackProvider = ({ children }) => { // Определяем компонент FeedbackProvider, который будет оборачивать дочерние компоненты
+    const [feedbacks, setFeedbacks] = useState([]); // Создаем состояние для хранения отзывов
 
-    // Определяет функцию addFeedback, которая принимает объект отзыва
-    // Когда вызывается эта функция, вызывает setFeedbacks, чтобы обновить состояние
-    // Новый отзыв добавляется в конец предыдущего массива отзывов с помощью оператора расширения
-    const addFeedback = (feedback) => {
-        setFeedbacks(prevFeedbacks => [...prevFeedbacks, feedback]);
+    // Функция для получения отзывов с сервера
+    const fetchFeedbacks = useCallback(async () => { // Объявляем асинхронную функцию для получения отзывов с мемоизацией
+        try {
+            const response = await fetch('http://localhost:5000/feedback'); // Выполняем запрос на сервер для получения отзывов
+            if (!response.ok) { // Проверяем, успешен ли ответ
+                throw new Error('Ошибка при получении отзывов'); // Если нет, выбрасываем ошибку
+            }
+            const data = await response.json(); // Преобразуем ответ в JSON
+            setFeedbacks(data); // Обновляем состояние отзывов
+        } catch (error) {
+            console.error("Ошибка при получении отзывов:", error); // Логируем ошибку в консоль
+        }
+    }, []); // Пустой массив зависимостей означает, что функция будет создана только один раз
+
+    // Функция для добавления отзыва на сервер
+    const addFeedback = async (feedback) => { // Объявляем асинхронную функцию для добавления отзыва
+        try {
+            const response = await fetch('http://localhost:5000/feedback', { // Выполняем POST-запрос на сервер для добавления отзыва
+                method: 'POST', // Указываем метод запроса
+                headers: {
+                    'Content-Type': 'application/json', // Указываем заголовок Content-Type как JSON
+                },
+                body: JSON.stringify(feedback), // Преобразуем объект отзыва в строку JSON и передаем в теле запроса
+            });
+            if (!response.ok) { // Проверяем, успешен ли ответ
+                throw new Error('Ошибка при добавлении отзыва'); // Если нет, выбрасываем ошибку
+            }
+            const data = await response.json(); // Преобразуем ответ в JSON
+            setFeedbacks(prevFeedbacks => [...prevFeedbacks, data]); // Обновляем состояние отзывов, добавляя новый отзыв к предыдущим
+        } catch (error) {
+            console.error("Ошибка при добавлении отзыва:", error); // Логируем ошибку в консоль
+        }
     };
 
-    //  Возвращает JSX-разметку, где FeedbackContext.Provider оборачивает children. 
-    // Значение, передаваемое через value, включает массив отзывов и функцию для их добавления, чтобы дочерние получили доступ к данным
+    // Функция для удаления отзыва с сервера
+    const deleteFeedback = async (id) => { // Объявляем асинхронную функцию для удаления отзыва по его ID
+        try {
+            const response = await fetch(`http://localhost:5000/feedback/${id}`, { // Выполняем DELETE-запрос на сервер для удаления отзыва по ID
+                method: 'DELETE', // Указываем метод запроса как DELETE
+            });
+            if (!response.ok) { // Проверяем, успешен ли ответ
+                throw new Error('Ошибка при удалении отзыва'); // Если нет, выбрасываем ошибку
+            }
+            setFeedbacks(prevFeedbacks => prevFeedbacks.filter(feedback => feedback.id !== id)); // Обновляем состояние отзывов, фильтруя удаленный отзыв по ID
+        } catch (error) {
+            console.error("Ошибка при удалении отзыва:", error); // Логируем ошибку в консоль
+        }
+    };
+
+    useEffect(() => { 
+        fetchFeedbacks(); // Вызываем функцию получения отзывов при монтировании компонента 
+    }, [fetchFeedbacks]); 
+
     return (
-        <FeedbackContext.Provider value={{ feedbacks, addFeedback }}>
-            {children}
+        <FeedbackContext.Provider value={{ feedbacks, addFeedback, deleteFeedback }}> {/* Передаем состояние и функции через контекст */}
+            {children} {/* Отображаем дочерние компоненты */}
         </FeedbackContext.Provider>
     );
 };
 
-// Создаёт кастомный хук useFeedback, который использует useContext для доступа к FeedbackContext
-// Это позволяет другим компонентам легко использовать контекст, не имея необходимости явно передавать его через пропсы
-export const useFeedback = () => {
-    return useContext(FeedbackContext);
+export const useFeedback = () => { 
+    return useContext(FeedbackContext); // Создаем хук для использования контекста в других компонентах 
 };
