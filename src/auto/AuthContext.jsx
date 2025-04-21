@@ -1,72 +1,127 @@
-// src/auto/AuthContext.jsx
-import React, { createContext, useContext, useState } from 'react'; // Импортируем необходимые библиотеки и хуки
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-const AuthContext = createContext(); // Создаем контекст для хранения и передачи данных аутентификации
+// Создаём контекст для авторизации
+const AuthContext = createContext();
 
+// Создаём компонент-провайдер для управления состоянием аутентификации
 export const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false); // Состояние для отслеживания аутентификации пользователя
-    const [userEmail, setUserEmail] = useState(""); // Хранит адрес электронной почты текущего аутентифицированного пользователя
+    // Состояния для отслеживания состояния аутентификации
+    const [isAuthenticated, setIsAuthenticated] = useState(false);  // Статус аутентификации
+    const [userEmail, setUserEmail] = useState("");  // Email пользователя
+    const [userRole, setUserRole] = useState("");  // Роль пользователя
+    const [loading, setLoading] = useState(true);  // Состояние для загрузки данных пользователя
 
-    const login = async (email, password) => { // Функция для входа пользователя
-        const response = await fetch(`http://localhost:5000/users?email=${email}&password=${password}`); // Запрос на сервер для проверки учетных данных
-        
-        if (response.ok) { // Если ответ от сервера успешный
-            const users = await response.json(); // Получаем список пользователей
-            if (users.length > 0) { // Если пользователь найден
-                setIsAuthenticated(true); // Устанавливаем состояние аутентификации в true
-                setUserEmail(email); // Сохраняем email пользователя
-                return true; // Успешный вход
+    // Вспомогательная функция для сохранения данных пользователя в localStorage
+    const saveUserToLocalStorage = (email, role) => {
+        const userProfile = { email, role };  // Создаём объект профиля пользователя
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));  // Сохраняем в localStorage
+    };
+
+    // Вспомогательная функция для восстановления данных пользователя из localStorage
+    const loadUserFromLocalStorage = useCallback(() => {
+        const storedUser = localStorage.getItem('userProfile');  // Получаем данные пользователя из localStorage
+        if (storedUser) {
+            const { email, role } = JSON.parse(storedUser);  // Парсим данные из localStorage
+            setIsAuthenticated(true);  // Помечаем пользователя как аутентифицированного
+            setUserEmail(email);  // Устанавливаем email пользователя
+            setUserRole(role);  // Устанавливаем роль пользователя
+        }
+    }, []);  // useCallback, чтобы избежать лишних пересозданий функции
+
+    // Загружаем пользователя при монтировании компонента
+    useEffect(() => {
+        loadUserFromLocalStorage();  // Загружаем данные пользователя из localStorage
+        setLoading(false);  // Завершаем процесс загрузки
+    }, [loadUserFromLocalStorage]);  // Зависимость от loadUserFromLocalStorage
+
+    // Авторизация пользователя
+    const login = async (email, password) => {
+        try {
+            // Отправляем запрос на сервер для авторизации пользователя
+            const response = await fetch(`http://localhost:5000/users?email=${email}&password=${password}`);
+            if (!response.ok) throw new Error('Ошибка авторизации.');  // Если ошибка, выбрасываем исключение
+            const users = await response.json();  // Получаем список пользователей
+            if (users.length > 0) {
+                const user = users[0];  // Берём первого пользователя из списка
+                if (user.blocked) {
+                    alert("Ваш аккаунт заблокирован. Обратитесь к администратору.");  // Если аккаунт заблокирован
+                    return false;
+                }
+
+                setIsAuthenticated(true);  // Устанавливаем статус аутентификации
+                setUserEmail(user.email);  // Устанавливаем email пользователя
+                setUserRole(user.role);  // Устанавливаем роль пользователя
+                saveUserToLocalStorage(user.email, user.role);  // Сохраняем данные в localStorage
+
+                return true;
             } else {
-                alert("Неверный email или пароль."); // Уведомляем о неверных учетных данных
-                return false; // Неверные учетные данные
+                alert("Неверный email или пароль.");  // Если email или пароль неверные
+                return false;
             }
-        } else {
-            return false; // Ошибка входа, если ответ не успешный
+        } catch (error) {
+            alert("Ошибка при подключении к серверу.");  // Обработка ошибки подключения к серверу
+            console.error(error);  // Логируем ошибку
+            return false;
         }
     };
 
-    const logout = () => { // Функция для выхода пользователя
-        setIsAuthenticated(false); // Сбрасываем состояние аутентификации
-        setUserEmail(''); // Очищаем email пользователя
-        
-        localStorage.removeItem('userProfile'); // Удаляем профиль пользователя из localStorage
+    // Выход пользователя
+    const logout = () => {
+        setIsAuthenticated(false);  // Сбрасываем статус аутентификации
+        setUserEmail('');  // Очищаем email пользователя
+        setUserRole('');  // Очищаем роль пользователя
+        localStorage.removeItem('userProfile');  // Удаляем данные пользователя из localStorage
     };
 
-    const register = async (email, password) => { // Функция для регистрации нового пользователя
-        const checkResponse = await fetch(`http://localhost:5000/users?email=${email}`); // Проверяем, существует ли пользователь с таким email
-        
-        if (checkResponse.ok) { // Если ответ от сервера успешный
-            const existingUsers = await checkResponse.json(); // Получаем список существующих пользователей
-            if (existingUsers.length > 0) { // Если пользователь уже существует
-                alert("Пользователь с таким email уже существует. Пожалуйста, войдите в систему."); 
-                return false; // Пользователь уже существует
-            }
-        }
+    // Регистрация нового пользователя
+    const register = async (email, password) => {
+        try {
+            // Отправляем запрос на сервер для регистрации нового пользователя
+            const response = await fetch('http://localhost:5000/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    role: 'user',  // Роль по умолчанию - пользователь
+                    blocked: false,  // Статус блокировки - не заблокирован
+                }),
+            });
 
-        const response = await fetch('http://localhost:5000/users', { // Если пользователя не существует, продолжаем регистрацию
-            method: 'POST', // Метод запроса POST для создания нового пользователя
-            headers: {
-                'Content-Type': 'application/json', // Указываем тип содержимого как JSON
-            },
-            body: JSON.stringify({ email, password }), // Отправляем email и пароль в теле запроса в формате JSON
-        });
-    
-        if (response.ok) { // Если ответ от сервера успешный после регистрации
-            const user = await response.json(); // Получаем данные нового пользователя
-            setIsAuthenticated(true); // Устанавливаем состояние аутентификации в true
-            setUserEmail(user.email); // Сохраняем email нового пользователя
-            return true; // Успешная регистрация
-        } else {
-            alert("Ошибка регистрации. Пожалуйста, попробуйте еще раз."); // Уведомляем об ошибке регистрации
-            return false; // Ошибка регистрации
+            if (!response.ok) throw new Error('Ошибка регистрации.');  // Если ошибка, выбрасываем исключение
+            const user = await response.json();  // Получаем данные нового пользователя
+
+            setIsAuthenticated(true);  // Устанавливаем статус аутентификации
+            setUserEmail(user.email);  // Устанавливаем email пользователя
+            setUserRole(user.role);  // Устанавливаем роль пользователя
+            saveUserToLocalStorage(user.email, user.role);  // Сохраняем данные в localStorage
+
+            return true;
+        } catch (error) {
+            alert("Ошибка при регистрации.");  // Обработка ошибки при регистрации
+            console.error(error);  // Логируем ошибку
+            return false;
         }
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, register, userEmail }}> 
-            {children} {/* Передаем дочерние компоненты */}
+        <AuthContext.Provider
+            value={{
+                isAuthenticated,  // Статус аутентификации
+                login,  // Функция для авторизации
+                logout,  // Функция для выхода
+                register,  // Функция для регистрации
+                userEmail,  // Email пользователя
+                userRole,  // Роль пользователя
+                loading,  // Статус загрузки
+            }}
+        >
+            {children}  {/* Рендерим дочерние компоненты */}
         </AuthContext.Provider>
     );
 };
 
-export const useAuth = () => useContext(AuthContext); // Хук для использования контекста аутентификации в других компонентах 
+// Хук для использования контекста в других компонентах
+export const useAuth = () => useContext(AuthContext);  // Возвращаем контекст аутентификации

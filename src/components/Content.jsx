@@ -1,57 +1,76 @@
-// components/Content.js
-import React from 'react'; // Импортируем библиотеку React
-import { Routes, Route } from 'react-router-dom'; // Импортируем компоненты для маршрутизации из react-router-dom
-import { Row, Col } from 'react-bootstrap'; // Импортируем необходимые компоненты из react-bootstrap
-import '../components/Content.css'; // Импортируем стили для компонента Content
-import { useTheme } from '../ThemeContext'; // Импортируем хук useTheme для получения информации о теме
-import { useAuth } from '../auto/AuthContext'; // Импортируем хук useAuth для получения информации об аутентификации
-import Counter from './Counter'; // Импортируем компонент Counter
-import AuthContainer from '../auto/AuthContainer'; // Импортируем компонент AuthContainer для аутентификации
-import UserProfile from '../auto/userProfile'; // Импортируем компонент UserProfile для отображения профиля пользователя
-import Home from '../pages/Home'; // Импортируем компонент Home для главной страницы
-import About from '../pages/About'; // Импортируем компонент About для страницы "О нас"
+// src/components/Content.jsx
 
-const labWorks = [ // Массив объектов, представляющих лабораторные работы
-    { id: 1, image: '/laba1.png', caption: 'Лабораторная работа 1' }, 
-    { id: 2, image: '/laba2.png', caption: 'Лабораторная работа 2' }, 
-    { id: 3, image: '/laba3.png', caption: 'Лабораторная работа 3' }, 
-    { id: 4, image: '/laba4.png', caption: 'Лабораторная работа 4' }, 
-    { id: 5, image: '/laba5.png', caption: 'Лабораторная работа 5' }, 
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Row, Col } from 'react-bootstrap';
+import '../components/Content.css';
+import { useTheme } from '../ThemeContext';
+import { useAuth } from '../auto/AuthContext';
+
+import Counter from './Counter';
+import AuthContainer from '../auto/AuthContainer';
+import UserProfile from '../auto/userProfile';
+import AdminPanel from '../admin/AdminPanel';
+import Home from '../pages/Home';
+import About from '../pages/About';
+
+const labWorks = [
+    { id: 1, image: '/laba1.png', caption: 'Лабораторная работа 1' },
+    { id: 2, image: '/laba2.png', caption: 'Лабораторная работа 2' },
+    { id: 3, image: '/laba3.png', caption: 'Лабораторная работа 3' },
+    { id: 4, image: '/laba4.png', caption: 'Лабораторная работа 4' },
+    { id: 5, image: '/laba5.png', caption: 'Лабораторная работа 5' },
     { id: 6, image: '/laba6.png', caption: 'Лабораторная работа 6' },
-    { id: 7, image: '/laba7.png', caption: 'Лабораторная работа 7' }, 
-    { id: 8, image: '/laba8.png', caption: 'Лабораторная работа 8' }, 
-    { id: 9, image: '/laba9.png', caption: 'Лабораторная работа 9' }, 
+    { id: 7, image: '/laba7.png', caption: 'Лабораторная работа 7' },
+    { id: 8, image: '/laba8.png', caption: 'Лабораторная работа 8' },
+    { id: 9, image: '/laba9.png', caption: 'Лабораторная работа 9' },
 ];
 
-const LabWork = ({ lab }) => { // Компонент LabWork принимает объект lab как пропс
+const LabWork = ({ lab }) => {
     return (
-        <div className="lab-work"> {/* Контейнер для отображения информации о лабораторной работе */}
-            <h3>{lab.caption}</h3> {/* Заголовок с названием лабораторной работы */}
-            <img className="slider-image" src={lab.image} alt={lab.caption} /> {/* Изображение лабораторной работы */}
+        <div className="lab-work">
+            <h3>{lab.caption}</h3>
+            <img className="slider-image" src={lab.image} alt={lab.caption} />
         </div>
     );
 };
 
-const Content = () => { // Основной компонент Content
-    const { isDarkTheme } = useTheme(); // Получаем состояние темы (темная или светлая)
-    const { isAuthenticated } = useAuth(); // Получаем информацию о том, аутентифицирован ли пользователь
+const Content = () => {
+    const { isDarkTheme } = useTheme();
+    const { isAuthenticated, userRole } = useAuth();
 
     return (
-        <div className={`content ${isDarkTheme ? 'dark' : 'light'}`}> {/* Контейнер с классом в зависимости от темы */}
-            <Row> {/* Строка для размещения колонок */}
-                <Col> {/* Колонка для содержимого */}
-                    {isAuthenticated ? ( // Проверяем, аутентифицирован ли пользователь
-                        <Routes> {/* Определяем маршруты */}
-                            {labWorks.map((lab) => ( // Проходим по массиву labWorks и создаем маршрут для каждой лабораторной работы
-                                <Route key={lab.id} path={`/lab${lab.id}`} element={<LabWork lab={lab} />} /> // Создаем маршрут для каждой лабораторной работы
+        <div className={`content ${isDarkTheme ? 'dark' : 'light'}`}>
+            <Row>
+                <Col>
+                    {isAuthenticated ? (
+                        <Routes>
+                            <Route path="/home" element={<Home />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/counter" element={<Counter />} />
+                            <Route path="/profile" element={<UserProfile />} />
+                            <Route
+                                path="/admin"
+                                element={
+                                    userRole === 'admin' ? (
+                                        <AdminPanel />
+                                    ) : (
+                                        <Navigate to="/profile" replace />
+                                    )
+                                }
+                            />
+                            {labWorks.map((lab) => (
+                                <Route
+                                    key={lab.id}
+                                    path={`/lab${lab.id}`}
+                                    element={<LabWork lab={lab} />}
+                                />
                             ))}
-                            <Route path="/home" element={<Home />} /> {/* Маршрут для главной страницы */}
-                            <Route path="/about" element={<About />} /> {/* Маршрут для страницы "О нас" */}
-                            <Route path="/counter" element={<Counter />} /> {/* Маршрут для компонента Counter */}
-                            <Route path="/profile" element={<UserProfile />} /> {/* Маршрут для профиля пользователя */}
+                            {/* Перенаправление на главную, если путь не найден */}
+                            <Route path="*" element={<Navigate to="/home" />} />
                         </Routes>
                     ) : (
-                        <AuthContainer /> // Если пользователь не аутентифицирован, отображаем AuthContainer
+                        <AuthContainer />
                     )}
                 </Col>
             </Row>
@@ -59,4 +78,4 @@ const Content = () => { // Основной компонент Content
     );
 };
 
-export default Content; // Экспортируем компонент Content по умолчанию
+export default Content;
